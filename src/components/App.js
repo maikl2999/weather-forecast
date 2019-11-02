@@ -11,7 +11,7 @@ const App = () => {
             <Router history={ history }>
                 <Switch>    
                     <Route path="/" exact component={CurrentWeather} />
-                    <Route path="/forecast" exact component={Forecast} />
+                    <Route path="/forecast/:id" exact component={Forecast} />
                 </Switch>
             </Router>
         </div>

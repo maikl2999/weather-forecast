@@ -26,14 +26,15 @@ class Search extends React.Component {
     }
 
     renderList() {
-        let result = this.props.current.map(city => {
+        if(!this.props.current) return;
+
+        let result = this.props.current.slice(-5, this.props.current.length).map(city => {
             return (
                 <button onClick={() => this.onClick(city.name)} key={city.name} className="btn btn-light">
                     { city.name }
                 </button>
             );
         })
-
         return result;
     }
 
