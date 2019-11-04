@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchWeatherCurrent } from '../actions'
+import { fetchWeatherCurrent } from '../actions';
 import Search from './Search';
 import { Link } from 'react-router-dom';
 
@@ -17,27 +17,40 @@ class Forecast extends React.Component {
         mm = mm > 9 ? mm : '0' + mm;
         let year = date.getFullYear();
 
-        return `${dd}.${mm}.${year}`
+        return `${dd}.${mm}.${year}`;
     }
 
     renderCurrent() {
         if(!this.props.current) {
-            return <div>Loading...</div>
+            return <div>Loading...</div>;
         }
 
         let data = this.props.current.find(item => item.name === this.props.city);
 
         if(!data) {
-            return <h1>This city is not found, enter the name correctly</h1>
+            return <h1>This city is not found, enter the name correctly</h1>;
         }
 
         return (
             <div>
                 <h1>Current weather in {data.name} ({data.sys.country})</h1>
-                <div className="my-2 ml-2">{this.getDate()}</div>
-                <div>Temperature (Celsius): {data.main.temp}</div>
-                <div>Humidity (%): {data.main.humidity}</div>
-                <div>Atmospheric pressure (hPa): {data.main.pressure}</div>
+                <div className="my-4 ml-2"><strong>{this.getDate()}</strong></div>
+                <table className="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>Temperature</td>
+                            <td>{Math.round(data.main.temp)} ℃</td>
+                        </tr>
+                        <tr>
+                            <td>Humidity</td>
+                            <td> {data.main.humidity} %</td>
+                        </tr>
+                        <tr>
+                            <td>Atmospheric pressure</td>
+                            <td>{data.main.pressure} hPa</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <Link to={`/forecast/${data.name}`} className="btn btn-primary mt-2">Forecast for {data.name}</Link>
             </div>
         );
