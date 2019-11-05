@@ -1,8 +1,14 @@
 import axios from 'axios';
+import {
+    APIKEY,
+    FETCH_WEATHER_CURRENT,
+    FETCH_WEATHER_FORECAST
+} from './types';
 
-const APIKEY = '5f0a7769e434c814c37368949458ce48';
+const weatherUrl = 'http://api.openweathermap.org/data/2.5/weather';
+const forecastUrl = 'http://api.openweathermap.org/data/2.5/forecast';
 
-export const fetchWeatherCurrent = cityName => async (dispatch, getState) => {
+export const fetchWeatherCurrent = cityName => (dispatch, getState) => {
 
     let current = getState().weather.current;
 
@@ -12,23 +18,20 @@ export const fetchWeatherCurrent = cityName => async (dispatch, getState) => {
         current = current.filter(item => item.name.toLowerCase() !== cityName.toLowerCase())
         current.push(currentCity)
 
-        dispatch ({ type: 'FETCH_WEATHER_CURRENT', payload: { current, city: currentCity.name } });
+        dispatch ({ type: FETCH_WEATHER_CURRENT, payload: { current, city: currentCity.name } });
         return
     }
 
-    let openweathermap = axios.create({
-        baseURL: `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&APPID=${APIKEY}`    
-        });
-
-    const response = await openweathermap.get().catch(err => alert(`${err.message}\nMaybe incorrect city name "${cityName}"`));
-    if(!response) return;
- 
-    current.push(response.data)
-
-    dispatch({ type: 'FETCH_WEATHER_CURRENT', payload: { current, city: response.data.name } });
+    return axios.get(`${weatherUrl}?q=${cityName}&units=metric&APPID=${APIKEY}`)
+        .then(response => {
+            if(!response) return;
+            current.push(response.data);
+            dispatch({ type: FETCH_WEATHER_CURRENT, payload: { current, city: response.data.name } });
+        })
+        .catch(err => alert(`${err.message}\nMaybe incorrect city name "${cityName}"`));
 }
 
-export const fetchWeatherForecast = cityName => async (dispatch, getState) => {
+export const fetchWeatherForecast = cityName => (dispatch, getState) => {
 
     let current = getState().weather.forecast;
 
@@ -36,14 +39,11 @@ export const fetchWeatherForecast = cityName => async (dispatch, getState) => {
         return
     }
 
-    let openweathermap = axios.create({
-        baseURL: `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=metric&APPID=${APIKEY}`  
-        });
-
-    const response = await openweathermap.get().catch(err => alert(`${err.message}\nMaybe incorrect city name "${cityName}"`));
-    if(!response) return;
- 
-    current.push(response.data)
-
-    dispatch({ type: 'FETCH_WEATHER_FORECAST', payload: { current } });
+    return axios.get(`${forecastUrl}?q=${cityName}&units=metric&APPID=${APIKEY}`)
+        .then(response => {
+            if(!response) return;
+            current.push(response.data);
+            dispatch({ type: FETCH_WEATHER_FORECAST, payload: { current } });
+        })
+        .catch(err => {throw(err)})
 }
