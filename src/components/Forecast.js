@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchWeatherForecast, fetchWeatherCurrent } from '../actions';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 class Forecast extends React.Component {
     componentDidMount() {
@@ -33,15 +34,15 @@ class Forecast extends React.Component {
     renderForecast() {
         if(!this.props.forecast) return <div>Loading...</div>;
         
-        let forecast = this.getForecastList().map(day => {
-            
+        let forecast = this.getForecastList().map((day, i) => {
+
             return (
                 <div className="col-sm-3" key={day.dt}>
                     
                     <table className="table table-borderless">
                     <tbody>
                         <tr>
-                            <th>{`Date: ${day.dt_txt.slice(8, 10)}.${day.dt_txt.slice(5, 7)}`}</th>
+                            <th>{moment().add((i + 1), 'days').format('DD.MM.YYYY.')}</th>
                         </tr>
                         <tr>
                             <td>Temperature</td>

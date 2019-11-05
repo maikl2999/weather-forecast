@@ -3,21 +3,12 @@ import { connect } from 'react-redux';
 import { fetchWeatherCurrent } from '../actions';
 import Search from './Search';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 class Forecast extends React.Component {
     componentDidMount() {
         let startCity = this.props.city? this.props.city : 'London';
         this.props.fetchWeatherCurrent(startCity);
-    }
-
-    getDate () {
-        let date = new Date();
-        let dd = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
-        let mm = date.getMonth() +1;
-        mm = mm > 9 ? mm : '0' + mm;
-        let year = date.getFullYear();
-
-        return `${dd}.${mm}.${year}`;
     }
 
     renderCurrent() {
@@ -34,7 +25,7 @@ class Forecast extends React.Component {
         return (
             <div>
                 <h1>Current weather in {data.name} ({data.sys.country})</h1>
-                <div className="my-4 ml-2"><strong>{this.getDate()}</strong></div>
+                <div className="my-4 ml-2"><strong>{moment().format('DD.MM.YYYY.')}</strong></div>
                 <table className="table table-borderless">
                     <tbody>
                         <tr>
